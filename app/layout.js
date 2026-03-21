@@ -1,6 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
+  metadataBase: new URL('https://www.dalil-almuhameen.com'),
   title: "دليل المحامين السعوديين | أكبر دليل للمحامين في المملكة",
   description: "ابحث عن أفضل المحامين ومكاتب المحاماة في السعودية. تقييمات حقيقية، أرقام هواتف، مواقع إلكترونية، وساعات عمل لأكثر من 1,170 محامي في 16 مدينة سعودية.",
   keywords: "محامي, محامين, مكتب محاماة, مستشار قانوني, السعودية, الرياض, جدة, الدمام",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
               <li><a href="/">الرئيسية</a></li>
               <li><a href="/lawyers">المحامين</a></li>
               <li><a href="/cities">المدن</a></li>
+              <li><a href="/faq">أسئلة شائعة</a></li>
             </ul>
           </div>
         </nav>

@@ -33,8 +33,58 @@ export default async function HomePage() {
     'yanbu': '/cities/yanbu.png', 'jubail': '/cities/jubail.png',
   };
 
+  // Homepage FAQs
+  const homeFaqs = [
+    { q: 'كيف أجد محامي في السعودية؟', a: 'استخدم دليل المحامين السعوديين للبحث عن محامين في 16 مدينة سعودية. يمكنك البحث باسم المحامي أو اختيار مدينتك لعرض المحامين القريبين منك مع تقييمات حقيقية وأرقام هواتف.' },
+    { q: 'كم عدد المحامين في الدليل؟', a: `يضم دليل المحامين السعوديين أكثر من ${totalLawyers?.toLocaleString('ar-SA')} محامي ومكتب محاماة في ${cities?.length} مدينة سعودية، مع أكثر من ${totalReviews?.toLocaleString('ar-SA')} تقييم حقيقي من العملاء.` },
+    { q: 'هل الدليل مجاني؟', a: 'نعم، دليل المحامين السعوديين مجاني تماماً. يمكنك البحث عن المحامين وقراءة التقييمات والحصول على معلومات التواصل بدون أي رسوم.' },
+  ];
+
+  // WebSite JSON-LD with SearchAction
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'دليل المحامين السعوديين',
+    url: 'https://www.dalil-almuhameen.com',
+    description: 'أكبر دليل شامل للمحامين ومكاتب المحاماة في المملكة العربية السعودية',
+    inLanguage: 'ar',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://www.dalil-almuhameen.com/lawyers?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  // Organization JSON-LD
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'دليل المحامين السعوديين',
+    url: 'https://www.dalil-almuhameen.com',
+    logo: 'https://www.dalil-almuhameen.com/favicon.ico',
+    description: `دليل شامل لأكثر من ${totalLawyers} محامي في ${cities?.length} مدينة سعودية`,
+    areaServed: { '@type': 'Country', name: 'المملكة العربية السعودية' },
+  };
+
+  // FAQ JSON-LD
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: homeFaqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       {/* ═══ HERO ═══ */}
       <section className="hero">
         <div className="hero-badge">🇸🇦 أكبر دليل للمحامين في المملكة</div>
@@ -177,6 +227,34 @@ export default async function HomePage() {
               <h3>تواصل</h3>
               <p>اتصل مباشرة أو زر الموقع الإلكتروني للمحامي</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FAQ SECTION ═══ */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <h2>❓ أسئلة شائعة</h2>
+            <p>إجابات سريعة على أكثر الأسئلة شيوعاً</p>
+          </div>
+          <div className="faq-list">
+            {homeFaqs.map((faq, i) => (
+              <details key={i} className="faq-item">
+                <summary className="faq-question">
+                  <span>{faq.q}</span>
+                  <span className="faq-icon">+</span>
+                </summary>
+                <div className="faq-answer">
+                  <p>{faq.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <Link href="/faq" className="search-btn" style={{ display: 'inline-block', textDecoration: 'none', background: 'var(--bg-secondary)', color: 'var(--text)' }}>
+              عرض جميع الأسئلة الشائعة ←
+            </Link>
           </div>
         </div>
       </section>

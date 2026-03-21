@@ -58,11 +58,21 @@ export default async function LawyerProfile({ params }) {
 
   const city = lawyer.city || lawyer.source_city;
 
+  // Find city slug for internal linking
+  const { data: cityData } = await supabase
+    .from('cities')
+    .select('slug, name_ar')
+    .eq('name_ar', lawyer.source_city)
+    .single();
+
+  const citySlug = cityData?.slug || '';
+
   // JSON-LD structured data
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
     name: lawyer.name,
+    url: `https://www.dalil-almuhameen.com/lawyers/${decodedSlug}`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: city,
@@ -71,17 +81,38 @@ export default async function LawyerProfile({ params }) {
       streetAddress: lawyer.formatted_address,
     },
     telephone: lawyer.phone_international || undefined,
-    url: lawyer.website || undefined,
+    ...(lawyer.website ? { sameAs: lawyer.website } : {}),
     aggregateRating: lawyer.rating ? {
       '@type': 'AggregateRating',
       ratingValue: lawyer.rating,
       reviewCount: lawyer.ratings_count || 0,
+      bestRating: 5,
+      worstRating: 1,
     } : undefined,
     geo: lawyer.latitude ? {
       '@type': 'GeoCoordinates',
       latitude: lawyer.latitude,
       longitude: lawyer.longitude,
     } : undefined,
+    ...(reviews && reviews.length > 0 ? {
+      review: reviews.slice(0, 5).map(r => ({
+        '@type': 'Review',
+        author: { '@type': 'Person', name: r.author || 'مستخدم' },
+        reviewRating: r.rating ? { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 } : undefined,
+        reviewBody: r.review_text || undefined,
+      })),
+    } : {}),
+  };
+
+  // Breadcrumb JSON-LD
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://www.dalil-almuhameen.com' },
+      ...(citySlug ? [{ '@type': 'ListItem', position: 2, name: `محامين في ${city}`, item: `https://www.dalil-almuhameen.com/cities/${citySlug}` }] : []),
+      { '@type': 'ListItem', position: citySlug ? 3 : 2, name: lawyer.name, item: `https://www.dalil-almuhameen.com/lawyers/${decodedSlug}` },
+    ],
   };
 
   function renderStars(rating) {
@@ -95,10 +126,20 @@ export default async function LawyerProfile({ params }) {
 
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
+      {/* Breadcrumb */}
+      <nav className="breadcrumb" aria-label="breadcrumb">
+        <div className="container">
+          <Link href="/">الرئيسية</Link>
+          <span className="breadcrumb-sep">/</span>
+          {citySlug ? (
+            <><Link href={`/cities/${citySlug}`}>محامين في {city}</Link><span className="breadcrumb-sep">/</span></>
+          ) : null}
+          <span>{lawyer.name}</span>
+        </div>
+      </nav>
 
       {/* Header */}
       <section className="profile-header">
@@ -211,6 +252,13 @@ export default async function LawyerProfile({ params }) {
 
         {/* Sidebar — Similar Lawyers */}
         <div>
+          {citySlug && (
+            <div style={{ marginBottom: '24px' }}>
+              <Link href={`/cities/${citySlug}`} className="search-btn" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', fontSize: '0.9rem' }}>
+                عرض جميع المحامين في {city} ←
+              </Link>
+            </div>
+          )}
           {similar && similar.length > 0 && (
             <div>
               <h3 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>محامين آخرين في {city}</h3>

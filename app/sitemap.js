@@ -12,6 +12,7 @@ export default async function sitemap() {
     { url: BASE_URL, lastModified: new Date(), priority: 1.0, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/lawyers`, lastModified: new Date(), priority: 0.9, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/cities`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
+    { url: `${BASE_URL}/faq`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
   ];
 
   const cityPages = (cities || []).map(c => ({
