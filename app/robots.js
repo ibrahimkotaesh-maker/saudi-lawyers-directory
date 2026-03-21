@@ -4,6 +4,6 @@ export default function robots() {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://saudi-lawyers.vercel.app/sitemap.xml',
+    sitemap: 'https://www.dalil-almuhameen.com/sitemap.xml',
   };
 }

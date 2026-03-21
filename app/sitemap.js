@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 
-const BASE_URL = 'https://saudi-lawyers.vercel.app';
+const BASE_URL = 'https://www.dalil-almuhameen.com';
 
 export default async function sitemap() {
   // Fetch all lawyers
