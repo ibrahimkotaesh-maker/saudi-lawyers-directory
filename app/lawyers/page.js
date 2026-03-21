@@ -1,9 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+
+export default function LawyersPageWrapper() {
+  return (
+    <Suspense fallback={<div style={{padding:'140px 24px',textAlign:'center'}}>جاري التحميل...</div>}>
+      <LawyersPage />
+    </Suspense>
+  );
+}
 
 const CITIES = [
   'الرياض', 'جدة', 'الدمام والخبر والظهران', 'مكة المكرمة', 'المدينة المنورة',
@@ -13,7 +21,7 @@ const CITIES = [
 
 const PER_PAGE = 20;
 
-export default function LawyersPage() {
+function LawyersPage() {
   const searchParams = useSearchParams();
   const [lawyers, setLawyers] = useState([]);
   const [total, setTotal] = useState(0);
