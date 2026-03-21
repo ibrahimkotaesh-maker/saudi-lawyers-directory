@@ -877,3 +877,56 @@ h1, h2, h3, h4 {
   .footer-inner { flex-direction: column; }
   .section { padding: 48px 16px; }
 }
+
+/* ═══ CITY PHOTO CARDS ═══ */
+.city-card-photo {
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.city-photo {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.city-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.city-card-photo:hover .city-photo img {
+  transform: scale(1.08);
+}
+
+.city-photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 16px 16px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: #fff;
+}
+
+.city-photo-overlay h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.city-photo-overlay .city-count {
+  color: rgba(255,255,255,0.85);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+@media (max-width: 480px) {
+  .city-photo { height: 140px; }
+}

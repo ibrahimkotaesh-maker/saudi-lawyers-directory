@@ -12,11 +12,15 @@ export default async function CitiesPage() {
     .select('*')
     .order('lawyer_count', { ascending: false });
 
-  const cityIcons = {
-    'riyadh': '🏙️', 'jeddah': '🌊', 'dammam-khobar': '🏗️', 'mecca': '🕋',
-    'medina': '🕌', 'taif': '🌹', 'tabuk': '🏔️', 'abha': '⛰️',
-    'khamis': '🌿', 'buraydah': '🌴', 'hail': '🏜️', 'najran': '🌅',
-    'jazan': '🐠', 'al-ahsa': '🌾', 'yanbu': '⚓', 'jubail': '🏭',
+  const cityImages = {
+    'riyadh': '/cities/riyadh.png', 'jeddah': '/cities/jeddah.png',
+    'dammam-khobar': '/cities/dammam-khobar.png', 'mecca': '/cities/mecca.png',
+    'medina': '/cities/medina.png', 'taif': '/cities/taif.png',
+    'tabuk': '/cities/tabuk.png', 'abha': '/cities/abha.png',
+    'khamis': '/cities/khamis.png', 'buraydah': '/cities/buraydah.png',
+    'hail': '/cities/hail.png', 'najran': '/cities/najran.png',
+    'jazan': '/cities/jazan.png', 'al-ahsa': '/cities/al-ahsa.png',
+    'yanbu': '/cities/yanbu.png', 'jubail': '/cities/jubail.png',
   };
 
   return (
@@ -30,13 +34,17 @@ export default async function CitiesPage() {
 
       <section className="section">
         <div className="container">
-          <div className="cities-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
+          <div className="cities-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
             {cities?.map(city => (
               <Link href={`/cities/${city.slug}`} key={city.slug}>
-                <div className="city-card" style={{ padding: '32px 24px' }}>
-                  <div className="city-icon">{cityIcons[city.slug] || '🏛️'}</div>
-                  <h3>{city.name_ar}</h3>
-                  <div className="city-count">{city.lawyer_count} محامي</div>
+                <div className="city-card city-card-photo">
+                  <div className="city-photo">
+                    <img src={cityImages[city.slug] || '/cities/riyadh.png'} alt={city.name_ar} />
+                    <div className="city-photo-overlay">
+                      <h3>{city.name_ar}</h3>
+                      <div className="city-count">{city.lawyer_count} محامي</div>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}
