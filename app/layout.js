@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   metadataBase: new URL('https://www.dalil-almuhameen.com'),
@@ -66,6 +67,7 @@ export default function RootLayout({ children }) {
             <p>© {new Date().getFullYear()} دليل المحامين السعوديين — جميع الحقوق محفوظة</p>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
