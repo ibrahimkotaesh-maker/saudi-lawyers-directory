@@ -87,7 +87,7 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       {/* ═══ HERO ═══ */}
       <section className="hero">
-        <div className="hero-badge">🇸🇦 أكبر دليل للمحامين في المملكة</div>
+        <div className="hero-badge">أكبر دليل للمحامين في المملكة</div>
         <h1>
           ابحث عن <span>محامٍ موثوق</span>
           <br />في المملكة العربية السعودية
@@ -106,7 +106,7 @@ export default async function HomePage() {
                 <option key={c.slug} value={c.name_ar}>{c.name_ar}</option>
               ))}
             </select>
-            <button type="submit" className="search-btn">🔍 ابحث</button>
+            <button type="submit" className="search-btn">ابحث</button>
           </form>
         </div>
 
@@ -131,41 +131,55 @@ export default async function HomePage() {
       <section className="section" style={{ background: 'var(--bg)' }}>
         <div className="container">
           <div className="section-header">
-            <h2>⭐ أفضل المحامين تقييماً</h2>
+            <h2>أفضل المحامين تقييماً</h2>
             <p>محامين حاصلين على أعلى التقييمات من العملاء</p>
           </div>
-          <div className="lawyers-grid">
-            {featured?.map(lawyer => (
-              <Link href={`/lawyers/${lawyer.slug}`} key={lawyer.id}>
-                <div className="lawyer-card">
-                  <div className="lawyer-card-header">
-                    <div className="lawyer-avatar">
-                          {lawyer.photo_url ? (
-                            <img src={lawyer.photo_url} alt={lawyer.name} />
-                          ) : '⚖️'}
-                        </div>
-                    <div className="lawyer-info">
-                      <h3>{lawyer.name}</h3>
-                      <div className="lawyer-location">
-                        📍 {lawyer.city || lawyer.source_city}
-                        {lawyer.district ? ` — ${lawyer.district}` : ''}
-                      </div>
+          <div className="featured-list">
+            {featured?.map((lawyer, idx) => (
+              <Link href={`/lawyers/${lawyer.slug}`} key={lawyer.id} className="result-card">
+                <div className="card-rank">{idx + 1}</div>
+                <div className="card-image">
+                  {lawyer.photo_url ? (
+                    <img src={lawyer.photo_url} alt={lawyer.name} />
+                  ) : (
+                    <div className="card-image-placeholder">
+                      <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                     </div>
-                  </div>
-                  <div className="lawyer-meta">
-                    {lawyer.rating && (
-                      <span className="rating-badge">
-                        <span className="star">★</span> {lawyer.rating}
-                        <span style={{ color: 'var(--text-light)', fontWeight: 400, fontSize: '0.8rem' }}>
-                          ({lawyer.ratings_count})
-                        </span>
+                  )}
+                </div>
+                <div className="card-body">
+                  <h3 className="card-name">{lawyer.name}</h3>
+                  <div className="card-location">{lawyer.city || lawyer.source_city}{lawyer.district ? ` — ${lawyer.district}` : ''}</div>
+                  {lawyer.rating && (
+                    <div className="card-rating">
+                      <div className="stars">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={`star-icon ${i < Math.floor(lawyer.rating) ? 'filled' : (i === Math.floor(lawyer.rating) && lawyer.rating % 1 >= 0.3 ? 'half' : 'empty')}`}>★</span>
+                        ))}
+                      </div>
+                      <span className="rating-num">{lawyer.rating}</span>
+                      <span className="rating-count">({lawyer.ratings_count} تقييم)</span>
+                    </div>
+                  )}
+                  {lawyer.practice_area && (
+                    <div className="card-tags">
+                      {lawyer.practice_area.split('،').slice(0, 3).map((area, i) => (
+                        <span key={i} className="tag">{area.trim()}</span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="card-footer">
+                    {lawyer.phone_international && (
+                      <span className="card-meta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        {lawyer.phone_international}
                       </span>
                     )}
-                    {lawyer.phone_international && (
-                      <span className="meta-tag">📞 متوفر</span>
-                    )}
                     {lawyer.website && (
-                      <span className="meta-tag">🌐 موقع</span>
+                      <span className="card-meta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        موقع إلكتروني
+                      </span>
                     )}
                   </div>
                 </div>
@@ -184,7 +198,7 @@ export default async function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h2>🏙️ تصفح حسب المدينة</h2>
+            <h2>تصفح حسب المدينة</h2>
             <p>اختر مدينتك للعثور على المحامين القريبين منك</p>
           </div>
           <div className="cities-grid">
@@ -235,7 +249,7 @@ export default async function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h2>❓ أسئلة شائعة</h2>
+            <h2>أسئلة شائعة</h2>
             <p>إجابات سريعة على أكثر الأسئلة شيوعاً</p>
           </div>
           <div className="faq-list">
